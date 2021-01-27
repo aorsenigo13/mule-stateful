@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="38166fc9-0f1f-44c8-9bbf-da3123565531" >
-		<http:listener-connection host="0.0.0.0" port="8081" />
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
 	</http:listener-config>
 	<os:object-store name="Counter_store" doc:name="Object store" doc:id="46f7d839-9e6f-4498-8d2b-69b9cb392754" />
 	<configuration-properties doc:name="Configuration properties" doc:id="dd59c7b2-8eab-4b47-aa7c-69b79ff97d2f" file="config.yaml" />
@@ -27,6 +27,9 @@ http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/fil
 			<os:default-value ><![CDATA[#[0]]]></os:default-value>
 		</os:retrieve>
 		<set-variable value="#[vars.count+1]" doc:name="increment count" doc:id="511ec3a1-0705-43ed-9208-910096deb786" variableName="count"/>
+		<os:store doc:name="Store" doc:id="81ad5f7a-e0f4-44f8-8142-179064b6226c" key="currentCount" objectStore="Counter_store">
+			<os:value><![CDATA[#[vars.count]]]></os:value>
+		</os:store>
 		<vm:publish queueName="sequence_queue" doc:name="Publish sequence number to sequence_queue" doc:id="952c8330-ad0b-41b1-b31d-bd298a441f6e" config-ref="VM_Config">
 			<vm:content ><![CDATA[#[vars.count]]]></vm:content>
 		</vm:publish>
@@ -62,9 +65,6 @@ wait 3000]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="52c1384c-33c9-45f6-ad67-c6c911c51a7e" message="#['\n*** Node Called: ' ++ p('node') ++ '\nSeq: ' ++ vars.count]" />
-		<os:store doc:name="Store" doc:id="81ad5f7a-e0f4-44f8-8142-179064b6226c" key="currentCount" objectStore="Counter_store">
-			<os:value><![CDATA[#[vars.count]]]></os:value>
-		</os:store>
 		<file:write doc:name="Write" doc:id="f08eac6c-9365-4cb8-910f-82aeb0d0d5d6" config-ref="File_Config" path="counter.json" mode="APPEND"/>
 	</flow>
 </mule>
