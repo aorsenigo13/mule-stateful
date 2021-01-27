@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="data-example-json" format="json">
+      <types:shape format="weave" example="data-example.json"><![CDATA[%dw 2.0
+
+type data_example_json = Array<{|  numsequenza: Number {"typeId": "int"},   nodo: Number {"typeId": "int"},   prezzo: Number {"typeId": "double"}|}> {"example": "[{\\\"numsequenza\\\":1,\\\"nodo\\\":1,\\\"prezzo\\\":345.5},{\\\"numsequenza\\\":2,\\\"nodo\\\":1,\\\"prezzo\\\":5.54},{\\\"numsequenza\\\":3,\\\"nodo\\\":1,\\\"prezzo\\\":2000.88}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#2f666d4c-3bfb-4e03-90a3-0e75f1e61758">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="data-example-json"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
